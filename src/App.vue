@@ -1,3 +1,11 @@
 <template>
-  <div>首页</div>
+<!-- 一级路由容器 -->
+<router-view></router-view>
 </template>
+
+<script>
+export default {
+  setup () {
+  }
+}
+</script>
