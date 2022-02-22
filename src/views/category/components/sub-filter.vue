@@ -81,7 +81,7 @@ export default {
     const changeBrand = id => {
       if (data.value.brands.selected !== id) {
         data.value.brands.selected = id
-        emit('brandIsChange', getSelectedProp())
+        emit('brandischange', getSelectedProp())
       }
     }
     // 改变属性

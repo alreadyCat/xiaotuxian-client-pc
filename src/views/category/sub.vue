@@ -4,7 +4,7 @@
     <!-- 面包屑 -->
     <sub-bread></sub-bread>
     <!-- 筛选区 -->
-    <sub-filter @brandIsChange='brandIsChange' @propIsChange='propIsChange'></sub-filter>
+    <sub-filter @brandischange='brandischange' @propIsChange='propIsChange'></sub-filter>
     <!-- 排序 -->
     <div class="goods-list">
       <!-- 排序 -->
@@ -81,7 +81,7 @@ export default {
     }
 
     // 改变品牌，重新获取数据
-    const brandIsChange = params => {
+    const brandischange = params => {
       finished.value = false
       reqParams = { ...reqParams, ...params, page: 1 }
       goods.value = []
@@ -100,7 +100,7 @@ export default {
       finished,
       goods,
       sortChange,
-      brandIsChange,
+      brandischange,
       propIsChange
     }
   }

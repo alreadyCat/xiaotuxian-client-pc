@@ -1,5 +1,5 @@
 <template>
-  <RouterLink to="/" class='goods-item'>
+  <RouterLink :to="`/product/${info.id}`" class='goods-item'>
     <img :src="info.picture" alt="">
     <p class="name ellipsis">{{info.name}}</p>
     <p class="desc ellipsis">{{info.desc}}</p>

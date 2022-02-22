@@ -1,22 +1,20 @@
 <template>
   <div class="xtx-city" ref="target">
     <div class="select" @click="toggle" :class="{active:visible}">
-      <span class="placeholder">请选择配送地址</span>
+      <span class="placeholder">{{tag}}</span>
       <span class="value"></span>
       <i class="iconfont icon-angle-down"></i>
     </div>
-    <div class="option" v-if="visible" :key="newList.length">
+    <div class="option" v-if="visible">
       <div class="loading" v-if="loading"></div>
       <template v-else>
-        <span class="ellipsis" v-for="(area) in newList" :key="area.code" @click="currentCode = area.code">{{area.name}}</span>
+        <span class="ellipsis" v-for="(area) in newAreaList" :key="area.code" @click="showArea(area)">{{area.name}}</span>
       </template>
-
     </div>
   </div>
-  {{newList}}
 </template>
 <script>
-import { computed, ref } from 'vue-demi'
+import { ref } from 'vue-demi'
 import { onClickOutside } from '@vueuse/core'
 import axios from 'axios'
 export default {
@@ -31,8 +29,9 @@ export default {
       loading.value = true
       getArea().then(res => {
         areaList.value = res
+        loading.value = false
+        showArea(null)
       })
-      loading.value = false
     }
 
     const hide = () => {
@@ -48,23 +47,25 @@ export default {
       hide()
     })
 
-    // 计算要显示的城市
-
-    const currentCode = ref(0)
-    const newList = computed(() => {
-      if (currentCode.value === 0) {
-        return areaList.value
-      } else {
-        return newList.value.find(area => {
-          if (area.code === currentCode.value) {
-            console.log(area.areaList[0].areaList)
-            return area.areaList[0].areaList
-          }
-        })
+    // 选择城市
+    const newAreaList = ref([])
+    const address = ref([])
+    const tag = ref('请选择配送地址')
+    const showArea = (area) => {
+      if (area === null) {
+        address.value = []
+        newAreaList.value = areaList.value
+      } else if (area.areaList) {
+        address.value.push(area)
+        newAreaList.value = area.areaList
+      } else if (!area.areaList) {
+        address.value.push(area)
+        tag.value = `${address.value[0].name} ${address.value[1].name} ${address.value[2].name} `
+        visible.value = false
       }
-    })
+    }
 
-    return { visible, toggle, target, loading, currentCode, newList }
+    return { visible, toggle, target, loading, showArea, newAreaList, tag }
   }
 }
 

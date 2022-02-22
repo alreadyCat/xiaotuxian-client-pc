@@ -2,9 +2,16 @@
   <div class='xtx-carousel' @mouseenter="pause" @mouseleave="start">
     <ul class="carousel-body">
       <li class="carousel-item" v-for="(pic,index) in sliders" :key="index" :class="{fade:currentInd === index}">
-        <RouterLink to="/">
+        <RouterLink v-if="pic.imgUrl" to="/">
           <img :src="pic.imgUrl" alt="">
         </RouterLink>
+        <div v-else class="slider">
+          <RouterLink v-for="img in pic" :key="img.id" :to="`/product/${img.id}`">
+            <img :src="img.picture" alt="">
+            <p class="name ellipsis">{{img.name}}</p>
+            <p class="price">&yen;{{img.price}}</p>
+          </RouterLink>
+        </div>
       </li>
     </ul>
     <a href="javascript:;" class="carousel-btn prev" @click="prev"><i class="iconfont icon-angle-left"></i></a>
@@ -156,6 +163,31 @@ export default {
   &:hover {
     .carousel-btn {
       opacity: 1;
+    }
+  }
+}
+// 轮播商品
+.slider {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 40px;
+  > a {
+    width: 240px;
+    text-align: center;
+    img {
+      padding: 20px;
+      width: 230px!important;
+      height: 230px!important;
+    }
+    .name {
+      font-size: 16px;
+      color: #666;
+      padding: 0 40px;
+    }
+    .price {
+      font-size: 16px;
+      color: @priceColor;
+      margin-top: 15px;
     }
   }
 }
