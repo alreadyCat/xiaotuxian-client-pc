@@ -1,7 +1,7 @@
 <template>
   <div class="xtx-city" ref="target">
     <div class="select" @click="toggle" :class="{active:visible}">
-      <span class="placeholder">{{tag}}</span>
+      <span class="placeholder">{{fullLocation===''?tag:fullLocation}}</span>
       <span class="value"></span>
       <i class="iconfont icon-angle-down"></i>
     </div>
@@ -19,7 +19,13 @@ import { onClickOutside } from '@vueuse/core'
 import axios from 'axios'
 export default {
   name: 'XtxCity',
-  setup () {
+  props: {
+    fullLocation: {
+      type: String,
+      default: ''
+    }
+  },
+  setup (props, { emit }) {
     const visible = ref(false)
     const loading = ref(false)
     const areaList = ref([])
@@ -61,6 +67,7 @@ export default {
       } else if (!area.areaList) {
         address.value.push(area)
         tag.value = `${address.value[0].name} ${address.value[1].name} ${address.value[2].name} `
+        emit('change', address.value)
         visible.value = false
       }
     }
@@ -76,7 +83,6 @@ const getArea = () => {
     } else {
       const url = 'https://yjy-oss-files.oss-cn-zhangjiakou.aliyuncs.com/tuxian/area.json'
       axios.get(url).then(res => {
-        console.log(res)
         window.areaData = res.data
         resolve(res.data)
       })

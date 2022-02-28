@@ -137,7 +137,6 @@ export default {
         // })
         commentList.value = result.items
         commentNum.value = result
-        console.log(result)
       }, err => { console.log(err, 'findCommentList接口错误') })
     }, { immediate: true })
 
@@ -155,7 +154,6 @@ export default {
 
     // 分页器
     const currentChange = (index) => {
-      console.log(index)
       reqParams.page = index
     }
     return {

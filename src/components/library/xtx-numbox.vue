@@ -35,7 +35,6 @@ export default {
     const changeNum = (n) => {
       const newValue = num.value + n
       if (newValue < props.min || newValue > props.max) {
-        alert('没有库存了')
         return
       }
       num.value = num.value + n

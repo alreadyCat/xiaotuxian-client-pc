@@ -4,9 +4,12 @@ import defaultImg from '@/assets/images/200.png'
 // import xtxMore from '@/components/library/xtx-more'
 // import xtxBread from '@/views/category/components/xtx-bread'
 // import xtxBreadItem from '@/components/library/xtx-bread-item'
-
+import Message from '@/components/library/Message'
+import Confirm from './Confirm'
 const importFn = require.context('./', false, /\.vue$/)
 
+// 挂载全局的属性，能够通过组件实例调用的属性   this.$message
+//  app.config.globalProperties.$message = Message// 原型函数
 export default {
   install (app) {
     // app.component(xtxSkeleton.name, xtxSkeleton)
@@ -19,6 +22,8 @@ export default {
       const component = importFn(path).default
       // 注册组件
       app.component(component.name, component)
+      app.config.globalProperties.$message = Message
+      app.config.globalProperties.$confirm = Confirm
     })
     defineDirective(app)
   }

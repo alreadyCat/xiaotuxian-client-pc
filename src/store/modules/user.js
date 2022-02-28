@@ -2,17 +2,21 @@ export default {
   namespaced: true,
   state: {
     profile: {
-      id: '321',
+      id: '',
       avatar: '',
       nickname: '',
       account: '',
       mobile: '',
-      token: '3123123'
-    }
+      token: ''
+    },
+    redirectUrl: '/'
   },
   mutations: {
     setProfile (state, payload) {
       state.profile = payload
+    },
+    setRedirectUrl (state, url) {
+      state.redirectUrl = url
     }
   }
 }

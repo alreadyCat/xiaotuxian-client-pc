@@ -21,7 +21,9 @@ instance.interceptors.request.use(config => {
   return Promise.reject(err)
 })
 
-instance.interceptors.response.use(res => res.data, err => {
+instance.interceptors.response.use(res => {
+  return res.data
+}, err => {
   // 401 token失效，登陆失败
   if (err.response && err.response.status === 401) {
     //   1. 清空无效信息

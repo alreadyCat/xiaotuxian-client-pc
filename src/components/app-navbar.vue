@@ -3,11 +3,14 @@
     <div class="container">
       <ul>
         <template v-if="profile.token">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{profile.nickname}}</a></li>
-          <li><a href="javascript:;">退出登录</a></li>
+          <li><router-link to='/member'><i class="iconfont icon-user"></i>{{profile.nickname}}</router-link></li>
+          <li><a href="javascript:;" @click="logout">退出登录</a></li>
         </template>
         <template v-else>
-          <li><a href="javascript:;">请先登录</a></li>
+          <li>
+            <router-link to="/login">请先登录</router-link>
+            <!-- <a href="javascript:;">请先登录</a> -->
+          </li>
           <li><a href="javascript:;">免费注册</a></li>
         </template>
         <li><a href="javascript:;">我的订单</a></li>
@@ -20,14 +23,24 @@
   </nav>
 </template>
 <script>
-import { computed } from '@vue/runtime-core'
+import { computed, getCurrentInstance } from '@vue/runtime-core'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 export default {
   name: 'AppTopnav',
   setup () {
     const store = useStore()
+    const router = useRouter()
     const profile = computed(() => store.state.user.profile)
-    return { profile }
+    const { proxy } = getCurrentInstance()
+    const logout = () => {
+      store.commit('user/setProfile', {})
+      const currentPath = encodeURIComponent(router.currentRoute.value.fullPath)
+      store.commit('cart/setCart', [])
+      router.push(`/login?redirectUrl=${currentPath}`)
+      proxy.$message({ type: 'success', text: '退出成功' })
+    }
+    return { profile, logout }
   }
 }
 </script>

@@ -26,7 +26,7 @@
             :max="goods.inventory"
             title="数量"
           ></xtx-numbox>
-          <xtx-button type="primary">加入购物车</xtx-button>
+          <xtx-button type="primary" @click='insertCart'>加入购物车</xtx-button>
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { nextTick, provide, ref, watch } from 'vue-demi'
+import { getCurrentInstance, nextTick, provide, ref, watch } from 'vue-demi'
 import GoodsRelevant from './components/goods-relevant'
 import { findGoods } from '@/api/product'
 import { useRoute } from 'vue-router'
@@ -65,6 +65,7 @@ import GoodsSku from '@/views/goods/components/goods-sku'
 import GoodsTabs from '@/views/goods/components/goods-tabs'
 import GoodsHot from '@/views/goods/components/goods-hot'
 import goodsWaring from '@/views/goods/components/goods-waring'
+import { useStore } from 'vuex'
 export default {
   name: 'XtxGoodsPage',
   components: {
@@ -86,6 +87,7 @@ export default {
         goods.value.oldPrice = sku.oldPrice
         goods.value.inventory = sku.inventory
       }
+      currentSKU.value = sku
     }
 
     // 选择的数量
@@ -93,10 +95,40 @@ export default {
 
     // 给后代组件提供数据
     provide('goods', goods)
+
+    // 加入购物车
+    const currentSKU = ref(null)
+    const { proxy } = getCurrentInstance()
+    const store = useStore()
+    const insertCart = () => {
+      if (currentSKU.value && currentSKU.value.skuId) {
+        const { specsText: attrsText, skuId, inventory: stock } = currentSKU.value
+        const { name, price, id, mainPictures } = goods.value
+        store.dispatch('cart/insertCart', {
+          attrsText,
+          skuId,
+          stock,
+          name,
+          price,
+          nowPrice: price,
+          id,
+          picture: mainPictures[0],
+          selected: true,
+          count: count.value,
+          isEffective: true
+        }).then(() => {
+          proxy.$message({ type: 'success', text: '添加成功' })
+        })
+      } else {
+        proxy.$message({ type: 'warn', text: '请选择完整的商品属性' })
+      }
+    }
     return {
       goods,
       changeSpu,
-      count
+      count,
+      insertCart,
+      currentSKU
     }
   }
 }
@@ -111,8 +143,6 @@ const getGoods = () => {
         nextTick(() => {
           findGoods(route.params.id).then((res) => {
             goods.value = res.result
-
-            console.log(goods.value)
           })
         })
       }

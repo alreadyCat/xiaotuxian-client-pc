@@ -29,6 +29,7 @@ import { useRoute } from 'vue-router'
 import { ref, watch } from 'vue-demi'
 export default {
   name: 'SubFilter',
+  emits: ['brandischange', 'propIsChange'],
   setup (props, { emit }) {
     const route = useRoute()
     const data = ref(null)
